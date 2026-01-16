@@ -1,49 +1,41 @@
+```html
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Christopher A.H. | Portfolio</title>
-    
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;700&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
-    
     <style>
         :root {
             --bg-color: #0b0b0b;
             --text-color: #e4e4e7;
             --cursor-size: 12px;
         }
-
         body {
             background-color: var(--bg-color);
-            /* REVISED: HD Radial Gradient (Studio Light Effect) - No Noise */
             background-image: radial-gradient(circle at 50% 50%, #1a1a1a 0%, #0b0b0b 80%);
-            background-attachment: fixed; /* Background tetap diam saat scroll */
+            background-attachment: fixed;
             color: var(--text-color);
             font-family: 'Inter', sans-serif;
             overflow-x: hidden;
             cursor: none;
             -webkit-font-smoothing: antialiased;
         }
-
         .font-display { font-family: 'Space Grotesk', sans-serif; }
         .no-select { user-select: none; }
-        
-        /* --- NEW PROJECT BACKGROUND LAYER --- */
         #project-bg-layer {
             position: fixed;
             top: 0; left: 0; width: 100%; height: 100%;
             background-size: cover;
             background-position: center;
-            opacity: 0; /* Default hidden */
+            opacity: 0;
             transition: opacity 0.4s ease-in-out, transform 0.6s ease-out;
-            z-index: 0; /* Di atas warna dasar, di bawah konten */
+            z-index: 0;
             pointer-events: none;
             filter: grayscale(100%) brightness(0.6); 
         }
-
-        /* --- REVISED CURSOR (High Performance & Snappy) --- */
         #cursor {
             position: fixed; top: 0; left: 0;
             width: var(--cursor-size); height: var(--cursor-size);
@@ -59,11 +51,7 @@
             border: 1px solid white;
             backdrop-filter: blur(1px);
         }
-
-        /* --- MAGNETIC BUTTONS --- */
         .magnetic-wrap { display: inline-block; position: relative; }
-
-        /* --- PROJECT ITEM --- */
         .project-item {
             border-bottom: 1px solid rgba(255,255,255,0.1);
             transition: opacity 0.3s;
@@ -72,7 +60,6 @@
         }
         .project-item:hover { opacity: 1; }
         .project-list:hover .project-item:not(:hover) { opacity: 0.3; }
-        
         .profile-mask {
             clip-path: polygon(0 0, 100% 0, 100% 100%, 0% 100%);
             transition: clip-path 1s cubic-bezier(0.19, 1, 0.22, 1);
@@ -80,7 +67,6 @@
     </style>
 </head>
 <body>
-
     <div id="cursor"></div>
     <div id="project-bg-layer"></div>
 
@@ -95,7 +81,6 @@
 
     <main id="smooth-wrapper">
         <div id="smooth-content" class="relative z-10">
-
             <section class="min-h-screen flex flex-col justify-center px-6 md:px-20 pt-20 relative">
                 <div class="overflow-hidden">
                     <h1 class="hero-text font-display text-[12vw] leading-[0.9] font-bold uppercase tracking-tighter text-white">
@@ -107,7 +92,6 @@
                         Developer
                     </h1>
                 </div>
-                
                 <div class="mt-20 flex flex-col md:flex-row justify-between items-end">
                     <div class="max-w-md">
                         <p class="text-lg text-gray-400 leading-relaxed reveal-text">
@@ -131,13 +115,11 @@
                         <img src="myphoto.png" 
                              alt="Christopher Alberto" 
                              class="w-full h-full object-cover grayscale transition-all duration-700 group-hover:grayscale-0 group-hover:scale-105">
-                        
                         <div class="absolute bottom-4 left-4 text-xs uppercase tracking-widest text-white/50">
                             June 7th, 2009
                         </div>
                     </div>
                 </div>
-
                 <div class="w-full md:w-1/2">
                     <h2 class="font-display text-6xl md:text-8xl mb-10 text-white">Who?</h2>
                     <div class="text-xl md:text-2xl leading-relaxed text-gray-300 font-light space-y-6">
@@ -154,9 +136,7 @@
                     <h2 class="font-display text-4xl uppercase tracking-tighter">Selected Works</h2>
                     <span class="text-xs uppercase tracking-widest text-gray-500">(2023 - Present)</span>
                 </div>
-
                 <div class="project-list flex flex-col">
-                    
                     <div class="project-item group relative py-12 flex justify-between items-center cursor-none hoverable" 
                          onclick="window.open('https://sphael7.github.io/lorenz-attractor-simulator/', '_blank')"
                          data-bg="project1.png">
@@ -166,7 +146,6 @@
                         </div>
                         <div class="text-xs uppercase border border-gray-700 px-3 py-1 rounded-full text-gray-500 group-hover:border-white group-hover:text-white transition-all">View</div>
                     </div>
-
                     <div class="project-item group relative py-12 flex justify-between items-center cursor-none hoverable" 
                          onclick="window.open('https://sphael7.github.io/password-strength-tool/', '_blank')"
                          data-bg="project2.png">
@@ -176,7 +155,6 @@
                         </div>
                         <div class="text-xs uppercase border border-gray-700 px-3 py-1 rounded-full text-gray-500 group-hover:border-white group-hover:text-white transition-all">View</div>
                     </div>
-
                     <div class="project-item group relative py-12 flex justify-between items-center cursor-none hoverable" 
                          onclick="window.open('https://sphael7.github.io/lingua/', '_blank')"
                          data-bg="project3.png">
@@ -186,7 +164,6 @@
                         </div>
                         <div class="text-xs uppercase border border-gray-700 px-3 py-1 rounded-full text-gray-500 group-hover:border-white group-hover:text-white transition-all">View</div>
                     </div>
-                    
                     <div class="project-item group relative py-12 flex justify-between items-center cursor-none hoverable" 
                          onclick="window.open('https://sphael7.github.io/charun/', '_blank')"
                          data-bg="project4.png">
@@ -201,7 +178,6 @@
 
             <section id="contact" class="min-h-screen flex flex-col justify-center items-center px-6 relative">
                 <p class="text-sm uppercase tracking-widest text-gray-500 mb-8">Got an idea?</p>
-                
                 <div class="relative group cursor-none hoverable" id="email-container">
                     <h2 class="font-display text-[8vw] md:text-[6vw] font-bold text-center leading-none text-white transition-all duration-300 group-hover:blur-[2px]">
                         calberto<br>hamonangan<br>@gmail.com
@@ -210,14 +186,12 @@
                         <span class="bg-white text-black px-6 py-3 rounded-full uppercase tracking-widest font-bold text-sm">Copy</span>
                     </div>
                 </div>
-
                 <div class="flex space-x-10 mt-20">
                     <a href="https://instagram.com/chriss_aln" target="_blank" class="hoverable text-gray-400 hover:text-white uppercase text-sm tracking-widest">Instagram</a>
                     <a href="tel:+6281248340296" class="hoverable text-gray-400 hover:text-white uppercase text-sm tracking-widest">+62 812 4834 0296</a>
                 </div>
-                
                 <footer class="absolute bottom-10 w-full text-center text-gray-700 text-xs uppercase tracking-widest">
-                    &copy; 2026 Chris. All Rights Reserved.
+                    &copy; 2024 Chris. All Rights Reserved.
                 </footer>
             </section>
         </div>
@@ -226,12 +200,20 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
     <script src="https://unpkg.com/@studio-freight/lenis@1.0.34/dist/lenis.min.js"></script>
-
     <script>
-        // 1. INITIAL SETUP
+        const imagesToPreload = [
+            'myphoto.png',
+            'project1.png',
+            'project2.png',
+            'project3.png',
+            'project4.png'
+        ];
+        imagesToPreload.forEach(src => {
+            const img = new Image();
+            img.src = src;
+        });
+
         gsap.registerPlugin(ScrollTrigger);
-        
-        // Smooth Scroll (Lenis)
         const lenis = new Lenis({
             duration: 1.2,
             easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
@@ -249,7 +231,6 @@
         }
         requestAnimationFrame(raf);
 
-        // 2. REVISED CURSOR LOGIC (Low Latency / Fast)
         const cursor = document.getElementById('cursor');
         const hoverables = document.querySelectorAll('.hoverable');
         let mouseX = 0, mouseY = 0;
@@ -260,23 +241,29 @@
             mouseY = e.clientY;
         });
 
+        window.addEventListener('touchmove', (e) => {
+            mouseX = e.touches[0].clientX;
+            mouseY = e.touches[0].clientY;
+        }, { passive: true });
+
+        window.addEventListener('touchstart', (e) => {
+            mouseX = e.touches[0].clientX;
+            mouseY = e.touches[0].clientY;
+        }, { passive: true });
+
         function animateCursor() {
-            // Snappy movement (0.8 factor)
             cursorX += (mouseX - cursorX) * 0.8; 
             cursorY += (mouseY - cursorY) * 0.8;
-            
             cursor.style.transform = `translate3d(${cursorX}px, ${cursorY}px, 0) translate(-50%, -50%)`;
             requestAnimationFrame(animateCursor);
         }
         animateCursor();
 
-        // Cursor States
         hoverables.forEach(el => {
             el.addEventListener('mouseenter', () => cursor.classList.add('hovered'));
             el.addEventListener('mouseleave', () => cursor.classList.remove('hovered'));
         });
 
-        // 3. PROJECT BACKGROUND LOGIC (Full BG Change)
         const projectItems = document.querySelectorAll('.project-item');
         const bgLayer = document.getElementById('project-bg-layer');
 
@@ -284,18 +271,15 @@
             item.addEventListener('mouseenter', () => {
                 const bgImage = item.getAttribute('data-bg');
                 bgLayer.style.backgroundImage = `url(${bgImage})`;
-                // Opacity 0.15 for subtle background effect
                 bgLayer.style.opacity = '0.15'; 
                 bgLayer.style.transform = 'scale(1.05)';
             });
-
             item.addEventListener('mouseleave', () => {
                 bgLayer.style.opacity = '0';
                 bgLayer.style.transform = 'scale(1)';
             });
         });
 
-        // 4. ANIMATIONS ON SCROLL (Untouched)
         gsap.from('.hero-text', {
             y: 100,
             opacity: 0,
@@ -332,7 +316,6 @@
             ease: "none"
         });
 
-        // 5. COPY TO CLIPBOARD
         const emailContainer = document.getElementById('email-container');
         const emailText = "calbertohamonangan@gmail.com";
         
@@ -351,7 +334,8 @@
                 }, 2000);
             });
         });
-
     </script>
 </body>
 </html>
+
+```

@@ -1,4 +1,3 @@
-```html
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -22,6 +21,7 @@
             overflow-x: hidden;
             cursor: none;
             -webkit-font-smoothing: antialiased;
+            -webkit-tap-highlight-color: transparent;
         }
         .font-display { font-family: 'Space Grotesk', sans-serif; }
         .no-select { user-select: none; }
@@ -35,6 +35,7 @@
             z-index: 0;
             pointer-events: none;
             filter: grayscale(100%) brightness(0.6); 
+            will-change: opacity, transform;
         }
         #cursor {
             position: fixed; top: 0; left: 0;
@@ -44,6 +45,7 @@
             transform: translate(-50%, -50%);
             mix-blend-mode: difference;
             transition: width 0.15s ease-out, height 0.15s ease-out; 
+            will-change: transform;
         }
         #cursor.hovered {
             width: 50px; height: 50px;
@@ -233,8 +235,12 @@
 
         const cursor = document.getElementById('cursor');
         const hoverables = document.querySelectorAll('.hoverable');
-        let mouseX = 0, mouseY = 0;
-        let cursorX = 0, cursorY = 0;
+        const isTouch = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
+        
+        let mouseX = window.innerWidth / 2; 
+        let mouseY = window.innerHeight / 2;
+        let cursorX = mouseX;
+        let cursorY = mouseY;
 
         document.addEventListener('mousemove', (e) => {
             mouseX = e.clientX;
@@ -249,11 +255,18 @@
         window.addEventListener('touchstart', (e) => {
             mouseX = e.touches[0].clientX;
             mouseY = e.touches[0].clientY;
+            cursorX = mouseX;
+            cursorY = mouseY;
         }, { passive: true });
 
         function animateCursor() {
-            cursorX += (mouseX - cursorX) * 0.8; 
-            cursorY += (mouseY - cursorY) * 0.8;
+            if (isTouch) {
+                cursorX = mouseX;
+                cursorY = mouseY;
+            } else {
+                cursorX += (mouseX - cursorX) * 0.8; 
+                cursorY += (mouseY - cursorY) * 0.8;
+            }
             cursor.style.transform = `translate3d(${cursorX}px, ${cursorY}px, 0) translate(-50%, -50%)`;
             requestAnimationFrame(animateCursor);
         }
@@ -262,22 +275,29 @@
         hoverables.forEach(el => {
             el.addEventListener('mouseenter', () => cursor.classList.add('hovered'));
             el.addEventListener('mouseleave', () => cursor.classList.remove('hovered'));
+            el.addEventListener('touchstart', () => cursor.classList.add('hovered'), {passive: true});
+            el.addEventListener('touchend', () => cursor.classList.remove('hovered'), {passive: true});
         });
 
         const projectItems = document.querySelectorAll('.project-item');
         const bgLayer = document.getElementById('project-bg-layer');
 
         projectItems.forEach(item => {
-            item.addEventListener('mouseenter', () => {
+            const enter = () => {
                 const bgImage = item.getAttribute('data-bg');
                 bgLayer.style.backgroundImage = `url(${bgImage})`;
                 bgLayer.style.opacity = '0.15'; 
                 bgLayer.style.transform = 'scale(1.05)';
-            });
-            item.addEventListener('mouseleave', () => {
+            };
+            const leave = () => {
                 bgLayer.style.opacity = '0';
                 bgLayer.style.transform = 'scale(1)';
-            });
+            };
+
+            item.addEventListener('mouseenter', enter);
+            item.addEventListener('mouseleave', leave);
+            item.addEventListener('touchstart', enter, {passive: true});
+            item.addEventListener('touchend', leave, {passive: true});
         });
 
         gsap.from('.hero-text', {
@@ -337,5 +357,3 @@
     </script>
 </body>
 </html>
-
-```

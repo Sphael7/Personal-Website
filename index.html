@@ -71,7 +71,7 @@
         .hobby-row:hover .hobby-line { width: 60px; background-color: #fff; }
 
         /* --- OVERLAYS --- */
-        #photo-overlay, #edu-popup, #org-overlay {
+        #photo-overlay, #edu-popup, #org-overlay, #opinion-overlay, #book-overlay {
             position: fixed; top: 0; left: 0; width: 100%; height: 100vh;
             z-index: 9000; opacity: 0; pointer-events: none;
             display: flex; justify-content: center; align-items: center;
@@ -81,8 +81,18 @@
         #photo-overlay { background-color: #f4f4f0; overflow: hidden; }
         #edu-popup { background-color: rgba(0,0,0,0.85); backdrop-filter: blur(10px); z-index: 9500; }
         #org-overlay { background-color: #050505; z-index: 9200; }
+        
+        /* OPINION OVERLAY STYLES */
+        #opinion-overlay { 
+            background-color: #080808; z-index: 9300; display: block; overflow-y: auto;
+        }
 
-        #edu-popup.active, #org-overlay.active { opacity: 1; pointer-events: auto; }
+        /* BOOK OVERLAY STYLES */
+        #book-overlay {
+            background-color: #0c0c0c; z-index: 9400; display: block; overflow-y: auto;
+        }
+
+        #edu-popup.active, #org-overlay.active, #opinion-overlay.active, #book-overlay.active { opacity: 1; pointer-events: auto; }
         
         .edu-content-box {
             background: #111; border: 1px solid #333;
@@ -121,6 +131,47 @@
         }
         .org-item:hover::before { height: 100%; }
 
+        /* --- OPINION LIST STYLES --- */
+        .opinion-item {
+            border-bottom: 1px solid #222; padding: 4rem 0; display: flex; align-items: flex-start;
+            transition: all 0.5s cubic-bezier(0.19, 1, 0.22, 1); opacity: 0; transform: translateY(30px);
+        }
+        #opinion-overlay.active .opinion-item { opacity: 1; transform: translateY(0); }
+        .opinion-item:hover { border-bottom-color: #fff; padding-left: 20px; }
+        .opinion-num { font-family: 'JetBrains Mono', monospace; font-size: 0.8rem; color: #555; margin-right: 2rem; margin-top: 0.5rem; }
+        .opinion-title { font-family: 'Space Grotesk', sans-serif; font-size: 3vw; line-height: 1.1; color: #888; transition: color 0.3s; max-width: 80%; }
+        .opinion-item:hover .opinion-title { color: #fff; }
+        .opinion-arrow { opacity: 0; transform: translateX(-10px); transition: all 0.3s ease; color: white; font-size: 1.5rem; margin-left: auto; }
+        .opinion-item:hover .opinion-arrow { opacity: 1; transform: translateX(0); }
+        @media (max-width: 768px) { .opinion-title { font-size: 1.5rem; } .opinion-item { padding: 2rem 0; } }
+
+        /* --- BOOK GRID STYLES --- */
+        .book-grid {
+            display: grid; grid-template-columns: repeat(2, 1fr); gap: 40px;
+        }
+        @media (min-width: 768px) { .book-grid { grid-template-columns: repeat(4, 1fr); gap: 60px; } }
+        
+        .book-item {
+            perspective: 1000px; cursor: none; opacity: 0; transform: translateY(30px);
+        }
+        .book-wrapper {
+            transition: transform 0.4s ease, box-shadow 0.4s ease; transform-style: preserve-3d;
+        }
+        .book-cover {
+            aspect-ratio: 2/3; width: 100%; background-color: #222; overflow: hidden; position: relative;
+            box-shadow: 0 10px 30px -10px rgba(0,0,0,0.5); border-radius: 4px; transition: all 0.3s;
+        }
+        .book-cover img { width: 100%; height: 100%; object-fit: cover; filter: grayscale(100%); transition: filter 0.4s; }
+        
+        .book-item:hover .book-wrapper { transform: translateY(-10px) rotateX(2deg); }
+        .book-item:hover .book-cover { box-shadow: 0 20px 40px -10px rgba(0,0,0,0.7); }
+        .book-item:hover .book-cover img { filter: grayscale(0%); }
+        
+        .book-info { margin-top: 15px; text-align: center; }
+        .book-title { font-family: 'Space Grotesk', sans-serif; font-size: 1rem; color: #fff; margin-bottom: 4px; }
+        .book-author { font-family: 'Inter', sans-serif; font-size: 0.75rem; color: #666; text-transform: uppercase; letter-spacing: 0.05em; }
+
+
         /* Hide Scrollbar */
         .no-scrollbar::-webkit-scrollbar { display: none; }
         .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
@@ -150,6 +201,8 @@
         <a href="#" class="font-display font-bold text-xl tracking-tighter hoverable">CHRIS.</a>
         <div class="flex space-x-6 md:space-x-8 text-xs md:text-sm uppercase tracking-widest font-light items-center">
             <button onclick="openPhotoOverlay()" class="hoverable border-b border-transparent hover:border-white transition-all font-medium">Another Side</button>
+            <button onclick="openBookOverlay()" class="hoverable border-b border-transparent hover:border-white transition-all font-medium">Book</button>
+            <button onclick="openOpinionOverlay()" class="hoverable border-b border-transparent hover:border-white transition-all font-medium">Opinion</button>
             <button onclick="openOrgOverlay()" class="hoverable border-b border-transparent hover:border-white transition-all font-medium">Organization</button>
             <a href="#who" class="hoverable">Who</a>
             <a href="#education" class="hoverable">Edu</a>
@@ -309,62 +362,62 @@
                 </div>
 
                 <div class="mt-32">
-    <div class="flex items-center gap-4 mb-10">
-        <div class="wip-indicator"></div>
-        <h2 class="font-display text-2xl md:text-3xl uppercase tracking-tighter text-gray-300">Work in Progress</h2>
-        <span class="text-[10px] font-mono text-gray-600 border border-gray-800 px-2 py-1 rounded">RESEARCH_MODE_ACTIVE</span>
-    </div>
+                    <div class="flex items-center gap-4 mb-10">
+                        <div class="wip-indicator"></div>
+                        <h2 class="font-display text-2xl md:text-3xl uppercase tracking-tighter text-gray-300">Work in Progress</h2>
+                        <span class="text-[10px] font-mono text-gray-600 border border-gray-800 px-2 py-1 rounded">RESEARCH_MODE_ACTIVE</span>
+                    </div>
 
-    <div class="grid grid-cols-1 gap-6">
-        <div class="wip-card p-8 rounded-xl relative overflow-hidden group hoverable border-green-900/30">
-            <div class="absolute top-0 right-0 p-4 opacity-40 group-hover:opacity-100 transition-opacity">
-                <span class="font-mono text-[10px] text-green-400">FINALIZING_BUILD...</span>
-            </div>
-            <h4 class="font-mono text-xs text-gray-500 mb-4">:: IOT_SYSTEM_ARDUINO ::</h4>
-            <p class="font-display text-xl md:text-2xl text-gray-200 leading-snug group-hover:text-white transition-colors">
-                PENGEMBANGAN SISTEM MONITORING DAN LOGGING KUALITAS AIR BERBASIS ARDUINO PADA TANAMAN HIDROPONIK DAN AIR TANAH DI KAMPUNG KREATIF SUKARUAS
-            </p>
-            <div class="mt-6 flex items-center gap-2">
-                <div class="h-[1px] w-full bg-gray-800">
-                    <div class="h-full bg-green-500/50" style="width: 85%"></div>
-                </div>
-                <span class="text-[10px] uppercase text-green-500 font-bold whitespace-nowrap">Status: 85%</span>
-            </div>
-        </div>
+                    <div class="grid grid-cols-1 gap-6">
+                        <div class="wip-card p-8 rounded-xl relative overflow-hidden group hoverable border-green-900/30">
+                            <div class="absolute top-0 right-0 p-4 opacity-40 group-hover:opacity-100 transition-opacity">
+                                <span class="font-mono text-[10px] text-green-400">FINALIZING_BUILD...</span>
+                            </div>
+                            <h4 class="font-mono text-xs text-gray-500 mb-4">:: IOT_SYSTEM_ARDUINO ::</h4>
+                            <p class="font-display text-xl md:text-2xl text-gray-200 leading-snug group-hover:text-white transition-colors">
+                                PENGEMBANGAN SISTEM MONITORING DAN LOGGING KUALITAS AIR BERBASIS ARDUINO PADA TANAMAN HIDROPONIK DAN AIR TANAH DI KAMPUNG KREATIF SUKARUAS
+                            </p>
+                            <div class="mt-6 flex items-center gap-2">
+                                <div class="h-[1px] w-full bg-gray-800">
+                                    <div class="h-full bg-green-500/50" style="width: 85%"></div>
+                                </div>
+                                <span class="text-[10px] uppercase text-green-500 font-bold whitespace-nowrap">Status: 85%</span>
+                            </div>
+                        </div>
 
-        <div class="wip-card p-8 rounded-xl relative overflow-hidden group hoverable">
-            <div class="absolute top-0 right-0 p-4 opacity-20 group-hover:opacity-100 transition-opacity">
-                <span class="font-mono text-[10px] text-green-500">COMPILING...</span>
-            </div>
-            <h4 class="font-mono text-xs text-gray-500 mb-4">:: NEBULA_ALGORITHM ::</h4>
-            <p class="font-display text-xl md:text-2xl text-gray-200 leading-snug group-hover:text-white transition-colors">
-                Implementasi Algoritma NEBULA Menggunakan Metode Adaptive Context-Mixing untuk Optimalisasi Rasio Kompresi Data Teks
-            </p>
-            <div class="mt-6 flex items-center gap-2">
-                <div class="h-[1px] w-full bg-gray-800">
-                    <div class="h-full bg-gray-600" style="width: 65%"></div>
-                </div>
-                <span class="text-[10px] uppercase text-gray-600 whitespace-nowrap">Status: 65%</span>
-            </div>
-        </div>
+                        <div class="wip-card p-8 rounded-xl relative overflow-hidden group hoverable">
+                            <div class="absolute top-0 right-0 p-4 opacity-20 group-hover:opacity-100 transition-opacity">
+                                <span class="font-mono text-[10px] text-green-500">COMPILING...</span>
+                            </div>
+                            <h4 class="font-mono text-xs text-gray-500 mb-4">:: NEBULA_ALGORITHM ::</h4>
+                            <p class="font-display text-xl md:text-2xl text-gray-200 leading-snug group-hover:text-white transition-colors">
+                                Implementasi Algoritma NEBULA Menggunakan Metode Adaptive Context-Mixing untuk Optimalisasi Rasio Kompresi Data Teks
+                            </p>
+                            <div class="mt-6 flex items-center gap-2">
+                                <div class="h-[1px] w-full bg-gray-800">
+                                    <div class="h-full bg-gray-600" style="width: 65%"></div>
+                                </div>
+                                <span class="text-[10px] uppercase text-gray-600 whitespace-nowrap">Status: 65%</span>
+                            </div>
+                        </div>
 
-        <div class="wip-card p-8 rounded-xl relative overflow-hidden group hoverable">
-            <div class="absolute top-0 right-0 p-4 opacity-20 group-hover:opacity-100 transition-opacity">
-                <span class="font-mono text-[10px] text-green-500">ANALYZING...</span>
-            </div>
-            <h4 class="font-mono text-xs text-gray-500 mb-4">:: HYBRID_COMPRESSION ::</h4>
-            <p class="font-display text-xl md:text-2xl text-gray-200 leading-snug group-hover:text-white transition-colors">
-                Rancang Bangun Sistem Kompresi Citra Hibrida Menggunakan Transformasi FFT Schönhage-Strassen dan DCT Dialektika dengan Optimasi Atomic Arithmetic Coding
-            </p>
-            <div class="mt-6 flex items-center gap-2">
-                <div class="h-[1px] w-full bg-gray-800">
-                    <div class="h-full bg-gray-600" style="width: 40%"></div>
+                        <div class="wip-card p-8 rounded-xl relative overflow-hidden group hoverable">
+                            <div class="absolute top-0 right-0 p-4 opacity-20 group-hover:opacity-100 transition-opacity">
+                                <span class="font-mono text-[10px] text-green-500">ANALYZING...</span>
+                            </div>
+                            <h4 class="font-mono text-xs text-gray-500 mb-4">:: HYBRID_COMPRESSION ::</h4>
+                            <p class="font-display text-xl md:text-2xl text-gray-200 leading-snug group-hover:text-white transition-colors">
+                                Rancang Bangun Sistem Kompresi Citra Hibrida Menggunakan Transformasi FFT Schönhage-Strassen dan DCT Dialektika dengan Optimasi Atomic Arithmetic Coding
+                            </p>
+                            <div class="mt-6 flex items-center gap-2">
+                                <div class="h-[1px] w-full bg-gray-800">
+                                    <div class="h-full bg-gray-600" style="width: 40%"></div>
+                                </div>
+                                <span class="text-[10px] uppercase text-gray-600 whitespace-nowrap">Status: 40%</span>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-                <span class="text-[10px] uppercase text-gray-600 whitespace-nowrap">Status: 40%</span>
-            </div>
-        </div>
-    </div>
-</div>
             </section>
 
             <section id="contact" class="min-h-screen flex flex-col justify-center items-center px-6 relative">
@@ -420,47 +473,154 @@
         
         <div class="container mx-auto px-6 md:px-20 h-full flex flex-col justify-center">
             <h2 class="font-display text-[10vw] md:text-[6vw] font-bold text-white leading-none mb-16 opacity-10">ORGANIZATION</h2>
-            
             <div class="grid grid-cols-1 md:grid-cols-2 gap-16 md:gap-32">
                 <div class="org-col" style="transition-delay: 0.1s;">
                     <h3 class="font-mono text-sm text-gray-500 mb-8 pb-2 border-b border-gray-800">:: SMP LEVEL ::</h3>
                     <div class="space-y-12">
-                        <div class="org-item hoverable">
-                            <span class="text-xs font-mono text-gray-500 block mb-1">2024 - 2025</span>
-                            <h4 class="text-2xl text-white font-display">Wakil Ketua OSIS</h4>
-                            <p class="text-sm text-gray-400 mt-2">SMPN 49 Jakarta</p>
-                        </div>
-                        <div class="org-item hoverable">
-                            <span class="text-xs font-mono text-gray-500 block mb-1">2024 - 2025</span>
-                            <h4 class="text-xl text-white font-display">Koordinator Divisi IPS KIR</h4>
-                            <p class="text-sm text-gray-400 mt-2">SMPN 49 Jakarta</p>
-                        </div>
-                        <div class="org-item hoverable">
-                            <span class="text-xs font-mono text-gray-500 block mb-1">2023 - 2024</span>
-                            <h4 class="text-xl text-white font-display">Koordinator Divisi IPT/TIK KIR</h4>
-                            <p class="text-sm text-gray-400 mt-2">SMPN 49 Jakarta</p>
-                        </div>
+                        <div class="org-item hoverable"><span class="text-xs font-mono text-gray-500 block mb-1">2024 - 2025</span><h4 class="text-2xl text-white font-display">Wakil Ketua OSIS</h4><p class="text-sm text-gray-400 mt-2">SMPN 49 Jakarta</p></div>
+                        <div class="org-item hoverable"><span class="text-xs font-mono text-gray-500 block mb-1">2024 - 2025</span><h4 class="text-xl text-white font-display">Koordinator Divisi IPS KIR</h4><p class="text-sm text-gray-400 mt-2">SMPN 49 Jakarta</p></div>
+                        <div class="org-item hoverable"><span class="text-xs font-mono text-gray-500 block mb-1">2023 - 2024</span><h4 class="text-xl text-white font-display">Koordinator Divisi IPT/TIK KIR</h4><p class="text-sm text-gray-400 mt-2">SMPN 49 Jakarta</p></div>
                     </div>
                 </div>
-
                 <div class="org-col" style="transition-delay: 0.3s;">
                     <h3 class="font-mono text-sm text-gray-500 mb-8 pb-2 border-b border-gray-800">:: SMA LEVEL ::</h3>
                     <div class="space-y-12">
-                        <div class="org-item hoverable">
-                            <span class="text-xs font-mono text-gray-500 block mb-1">2025 - 2026</span>
-                            <h4 class="text-2xl text-white font-display">Ketua Divisi DP/DS Rohani Kristen</h4>
-                            <p class="text-sm text-gray-400 mt-2">SMAN 8 Jakarta</p>
+                        <div class="org-item hoverable"><span class="text-xs font-mono text-gray-500 block mb-1">2025 - 2026</span><h4 class="text-2xl text-white font-display">Ketua Divisi DP/DS Rohani Kristen</h4><p class="text-sm text-gray-400 mt-2">SMAN 8 Jakarta</p></div>
+                        <div class="org-item hoverable"><span class="text-xs font-mono text-gray-500 block mb-1">2025 - 2026</span><h4 class="text-xl text-white font-display">Sekretaris I Genesys</h4><p class="text-sm text-gray-400 mt-2">SMAN 8 Jakarta</p></div>
+                        <div class="org-item hoverable"><span class="text-xs font-mono text-gray-500 block mb-1">2025 - 2026</span><h4 class="text-xl text-white font-display">Ketua Program Kerja SPGO</h4><p class="text-sm text-gray-400 mt-2">Sains dan Perpustakaan • SMAN 8 Jakarta</p></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="opinion-overlay">
+        <div class="fixed top-8 right-8 z-50 cursor-pointer hoverable" onclick="closeOpinionOverlay()">
+            <div class="w-8 h-8 flex flex-col justify-center items-center group">
+                <span class="block w-full h-[1px] bg-white transform rotate-45 translate-y-[1px] transition-transform"></span>
+                <span class="block w-full h-[1px] bg-white transform -rotate-45 -translate-y-[1px] transition-transform"></span>
+            </div>
+            <p class="text-[10px] text-white font-bold uppercase tracking-widest mt-2 text-center font-display">Close</p>
+        </div>
+        <div class="min-h-screen px-6 md:px-32 py-32 flex flex-col relative z-10">
+            <h2 class="font-display text-[10vw] md:text-[6vw] font-bold text-white leading-none mb-4 opacity-10 fixed top-10 left-6 md:left-20 pointer-events-none">OPINION</h2>
+            <div class="mt-20 flex flex-col w-full">
+                <a href="https://medium.com/@calbertohamonangan/why-god-exists-because-logic-says-he-cant-be-proven-the-meta-logical-incompleteness-theory-c79bff7a14f5" target="_blank" class="opinion-item hoverable"><span class="opinion-num">01</span><h3 class="opinion-title">Why God Exists Because Logic Says He Can’t Be Proven: The Meta-Logical Incompleteness Theory</h3><span class="opinion-arrow">→</span></a>
+                <a href="https://medium.com/@calbertohamonangan/am-i-actually-good-25e1505a8f48" target="_blank" class="opinion-item hoverable"><span class="opinion-num">02</span><h3 class="opinion-title">“Am I Actually Good?”</h3><span class="opinion-arrow">→</span></a>
+                <a href="https://medium.com/@calbertohamonangan/an-essence-options-choice-a-reflection-on-how-we-learn-and-decide-5526f05b9b87" target="_blank" class="opinion-item hoverable"><span class="opinion-num">03</span><h3 class="opinion-title">An Essence, Options, Choice: A Reflection on How We Learn and Decide</h3><span class="opinion-arrow">→</span></a>
+                <a href="https://medium.com/@calbertohamonangan/egocentric-relationism-how-ego-becomes-the-new-standard-of-modern-affection-79fb06dccbcb" target="_blank" class="opinion-item hoverable"><span class="opinion-num">04</span><h3 class="opinion-title">Egocentric Relationism: How Ego Becomes the New Standard of Modern Affection</h3><span class="opinion-arrow">→</span></a>
+                <a href="https://medium.com/@calbertohamonangan/utopia-or-dystopia-human-inner-desire-from-a-social-perspective-12b937c001b3" target="_blank" class="opinion-item hoverable"><span class="opinion-num">05</span><h3 class="opinion-title">Utopia or Dystopia? Human Inner Desire from a Social Perspective</h3><span class="opinion-arrow">→</span></a>
+                <a href="https://medium.com/@calbertohamonangan/a-solution-to-the-grandfather-paradox-using-the-casual-amnesia-model-763a87ae507e" target="_blank" class="opinion-item hoverable"><span class="opinion-num">06</span><h3 class="opinion-title">A Solution to the Grandfather Paradox Using the Causal Amnesia Model</h3><span class="opinion-arrow">→</span></a>
+            </div>
+        </div>
+    </div>
+
+    <div id="book-overlay">
+        <div class="fixed top-8 right-8 z-50 cursor-pointer hoverable" onclick="closeBookOverlay()">
+            <div class="w-8 h-8 flex flex-col justify-center items-center group">
+                <span class="block w-full h-[1px] bg-white transform rotate-45 translate-y-[1px] transition-transform"></span>
+                <span class="block w-full h-[1px] bg-white transform -rotate-45 -translate-y-[1px] transition-transform"></span>
+            </div>
+            <p class="text-[10px] text-white font-bold uppercase tracking-widest mt-2 text-center font-display">Close</p>
+        </div>
+
+        <div class="min-h-screen px-6 md:px-20 py-32 flex flex-col relative z-10">
+            <h2 class="font-display text-[10vw] md:text-[6vw] font-bold text-white leading-none mb-16 opacity-10 fixed top-10 left-6 md:left-20 pointer-events-none">LIBRARY</h2>
+            
+            <div class="book-grid mt-10">
+                <div class="book-item hoverable">
+                    <div class="book-wrapper">
+                        <div class="book-cover">
+                            <img src="book_1.jpg" alt="The Courage to Be Disliked">
                         </div>
-                        <div class="org-item hoverable">
-                            <span class="text-xs font-mono text-gray-500 block mb-1">2025 - 2026</span>
-                            <h4 class="text-xl text-white font-display">Sekretaris I Genesys</h4>
-                            <p class="text-sm text-gray-400 mt-2">SMAN 8 Jakarta</p>
+                    </div>
+                    <div class="book-info">
+                        <h3 class="book-title">The Courage to Be Disliked</h3>
+                        <p class="book-author">Ichiro Kishimi & Fumitake Koga</p>
+                    </div>
+                </div>
+
+                <div class="book-item hoverable">
+                    <div class="book-wrapper">
+                        <div class="book-cover">
+                            <img src="book_2.jpg" alt="The Art of War">
                         </div>
-                        <div class="org-item hoverable">
-                            <span class="text-xs font-mono text-gray-500 block mb-1">2025 - 2026</span>
-                            <h4 class="text-xl text-white font-display">Ketua Program Kerja SPGO</h4>
-                            <p class="text-sm text-gray-400 mt-2">Sains dan Perpustakaan • SMAN 8 Jakarta</p>
+                    </div>
+                    <div class="book-info">
+                        <h3 class="book-title">The Art of War</h3>
+                        <p class="book-author">Andrie Wang</p>
+                    </div>
+                </div>
+
+                <div class="book-item hoverable">
+                    <div class="book-wrapper">
+                        <div class="book-cover">
+                            <img src="book_3.jpg" alt="Samkok">
                         </div>
+                    </div>
+                    <div class="book-info">
+                        <h3 class="book-title">Samkok</h3>
+                        <p class="book-author">Andrie Wang</p>
+                    </div>
+                </div>
+
+                <div class="book-item hoverable">
+                    <div class="book-wrapper">
+                        <div class="book-cover">
+                            <img src="book_4.jpg" alt="Psikologi Kebohongan">
+                        </div>
+                    </div>
+                    <div class="book-info">
+                        <h3 class="book-title">Psikologi Kebohongan</h3>
+                        <p class="book-author">Christie L. Hart, Ph.D</p>
+                    </div>
+                </div>
+
+                <div class="book-item hoverable">
+                    <div class="book-wrapper">
+                        <div class="book-cover">
+                            <img src="book_5.jpg" alt="The Darkest Hour">
+                        </div>
+                    </div>
+                    <div class="book-info">
+                        <h3 class="book-title">The Darkest Hour</h3>
+                        <p class="book-author">Pauline Margaretha</p>
+                    </div>
+                </div>
+
+                <div class="book-item hoverable">
+                    <div class="book-wrapper">
+                        <div class="book-cover">
+                            <img src="book_6.jpg" alt="Filosofi Teras">
+                        </div>
+                    </div>
+                    <div class="book-info">
+                        <h3 class="book-title">Filosofi Teras</h3>
+                        <p class="book-author">Henry Manampiring</p>
+                    </div>
+                </div>
+
+                <div class="book-item hoverable">
+                    <div class="book-wrapper">
+                        <div class="book-cover">
+                            <img src="book_7.jpg" alt="Naruto Comic Ch 1-44">
+                        </div>
+                    </div>
+                    <div class="book-info">
+                        <h3 class="book-title">Naruto Comic Ch 1-44</h3>
+                        <p class="book-author">Masashi Kishimoto</p>
+                    </div>
+                </div>
+
+                <div class="book-item hoverable">
+                    <div class="book-wrapper">
+                        <div class="book-cover">
+                            <img src="book_8.jpg" alt="Boruto Comic Ch 1-5">
+                        </div>
+                    </div>
+                    <div class="book-info">
+                        <h3 class="book-title">Boruto Comic Ch 1-5</h3>
+                        <p class="book-author">Masashi Kishimoto</p>
                     </div>
                 </div>
             </div>
@@ -582,6 +742,30 @@
             document.getElementById('org-overlay').classList.remove('active');
             lenis.start();
         }
+        
+        // --- OPINION OVERLAY LOGIC ---
+        function openOpinionOverlay() {
+            const overlay = document.getElementById('opinion-overlay');
+            overlay.classList.add('active');
+            lenis.stop(); // Stop main page scroll
+            gsap.fromTo('.opinion-item', { opacity: 0, y: 50 }, { opacity: 1, y: 0, duration: 0.8, stagger: 0.1, ease: "power2.out", delay: 0.2 });
+        }
+        function closeOpinionOverlay() {
+            document.getElementById('opinion-overlay').classList.remove('active');
+            lenis.start();
+        }
+
+        // --- BOOK OVERLAY LOGIC ---
+        function openBookOverlay() {
+            const overlay = document.getElementById('book-overlay');
+            overlay.classList.add('active');
+            lenis.stop();
+            gsap.fromTo('.book-item', { opacity: 0, y: 50 }, { opacity: 1, y: 0, duration: 0.8, stagger: 0.1, ease: "power2.out", delay: 0.2 });
+        }
+        function closeBookOverlay() {
+            document.getElementById('book-overlay').classList.remove('active');
+            lenis.start();
+        }
 
         // --- IMAGE & LENIS ---
         function initImageReveal() {
@@ -616,6 +800,10 @@
             document.querySelectorAll('.polaroid').forEach(el => {
                 el.onmouseenter = () => cursor.classList.add('drag-cursor');
                 el.onmouseleave = () => cursor.classList.remove('drag-cursor');
+            });
+            document.querySelectorAll('.book-item').forEach(el => {
+                el.onmouseenter = () => cursor.classList.add('hovered');
+                el.onmouseleave = () => cursor.classList.remove('hovered');
             });
         }
         refreshHoverables();
